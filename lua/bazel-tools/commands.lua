@@ -1,0 +1,143 @@
+local config = require("bazel-tools.config")
+local state = require("bazel-tools.state")
+local query = require("bazel-tools.query")
+
+local M = {}
+
+local function overseer_run(name, cmd)
+  local cfg = config.current.overseer
+  local overseer = require("overseer")
+  local task = overseer.new_task({
+    name = name,
+    cmd = cmd,
+  })
+  overseer.open({ enter = false, direction = cfg.direction })
+  task:start()
+end
+
+local function build_cmd(subcmd, target)
+  local cfg = config.current
+  local cmd = { cfg.bazel_command, subcmd }
+  if state.config ~= "" then
+    table.insert(cmd, "--config=" .. state.config)
+  end
+  table.insert(cmd, target)
+  return cmd
+end
+
+function M.select_config()
+  local cfg = config.current
+  vim.ui.select(cfg.configs, { prompt = "Bazel config:" }, function(choice)
+    if choice then
+      state.config = choice == "(default)" and "" or choice
+      vim.notify("Bazel config: " .. state.get_config_display())
+    end
+  end)
+end
+
+function M.select_build_target()
+  local cfg = config.current
+  query.query_targets(cfg.build_kind_filter, function(targets)
+    vim.ui.select(targets, { prompt = "Build target:" }, function(choice)
+      if choice then
+        state.build_target = choice
+        vim.notify("Build target: " .. choice)
+      end
+    end)
+  end)
+end
+
+function M.select_run_target()
+  local cfg = config.current
+  query.query_targets(cfg.run_kind_filter, function(targets)
+    vim.ui.select(targets, { prompt = "Run target:" }, function(choice)
+      if choice then
+        state.run_target = choice
+        vim.notify("Run target: " .. choice)
+      end
+    end)
+  end)
+end
+
+function M.build()
+  if not state.build_target then
+    return vim.notify("No build target selected", vim.log.levels.WARN)
+  end
+  overseer_run("Bazel Build: " .. state.build_target, build_cmd("build", state.build_target))
+end
+
+function M.run()
+  if not state.run_target then
+    return vim.notify("No run target selected", vim.log.levels.WARN)
+  end
+  overseer_run("Bazel Run: " .. state.run_target, build_cmd("run", state.run_target))
+end
+
+function M.debug()
+  if not state.run_target then
+    return vim.notify("No run target selected", vim.log.levels.WARN)
+  end
+
+  local cfg = config.current
+  local target = state.run_target
+  local dbg_config = cfg.dap.build_config
+
+  vim.notify("Building " .. target .. " (" .. dbg_config .. ")...")
+  vim.system(
+    { cfg.bazel_command, "build", "--config=" .. dbg_config, target },
+    { text = true },
+    function(build_result)
+      if build_result.code ~= 0 then
+        vim.schedule(function()
+          vim.notify("Debug build failed", vim.log.levels.ERROR)
+        end)
+        return
+      end
+      vim.system(
+        { cfg.bazel_command, "cquery", "--config=" .. dbg_config, "--output=files", target },
+        { text = true },
+        function(cq)
+          vim.schedule(function()
+            local binary = cq.stdout and cq.stdout:match("[^\n]+")
+            if not binary then
+              return vim.notify("Could not resolve binary path", vim.log.levels.ERROR)
+            end
+            require("dap").run({
+              type = cfg.dap.adapter,
+              request = "launch",
+              name = "Bazel: " .. target,
+              program = binary,
+              cwd = vim.fn.getcwd(),
+            })
+          end)
+        end
+      )
+    end
+  )
+end
+
+function M.refresh_compdb()
+  local cfg = config.current
+  overseer_run(
+    "Bazel: refresh compile_commands",
+    { cfg.bazel_command, "run", cfg.refresh_compdb_target }
+  )
+end
+
+function M.stop_executor()
+  for _, task in ipairs(require("overseer").list_tasks({ status = "RUNNING" })) do
+    if task.name:match("^Bazel Build") or task.name:match("^Bazel: refresh") then
+      task:stop()
+    end
+  end
+end
+
+function M.stop_runner()
+  for _, task in ipairs(require("overseer").list_tasks({ status = "RUNNING" })) do
+    if task.name:match("^Bazel Run") then
+      task:stop()
+    end
+  end
+end
+
+return M

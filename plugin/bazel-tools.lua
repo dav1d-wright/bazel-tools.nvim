@@ -1,0 +1,3 @@
+-- This file is auto-sourced by Neovim's runtime.
+-- Commands are registered in setup() instead, so this is a no-op placeholder
+-- that ensures the plugin directory is recognized by Neovim's package system.
