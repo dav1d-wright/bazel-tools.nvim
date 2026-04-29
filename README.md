@@ -94,6 +94,8 @@ require("bazel-tools").setup({
 | `BazelStopExecutor` | Stop running build tasks |
 | `BazelStopRunner` | Stop running run tasks |
 | `BazelStopTester` | Stop running test tasks |
+| `BazelGotoBuildFile` | Jump to the nearest BUILD file |
+| `BazelGotoLabel` | Navigate to the label under the cursor |
 
 ## Keybindings
 
@@ -116,6 +118,8 @@ if bt.is_bazel_project() then
     { "<leader>cf", "<cmd>wa<cr><cmd>BazelBuildCurrentFile<cr>", desc = "Build current file" },
     { "<leader>cx", "<cmd>BazelSelectTestTarget<cr>",   desc = "Select test target" },
     { "<leader>cX", "<cmd>wa<cr><cmd>BazelTest<cr>",   desc = "Run test" },
+    { "<leader>cB", "<cmd>BazelGotoBuildFile<cr>",      desc = "Go to BUILD file" },
+    { "<leader>cL", "<cmd>BazelGotoLabel<cr>",         desc = "Go to label" },
     { "<leader>cs", "<cmd>BazelStopExecutor<cr>",      desc = "Stop build" },
     { "<leader>cS", "<cmd>BazelStopRunner<cr>",        desc = "Stop run" },
   })

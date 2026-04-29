@@ -32,6 +32,10 @@ function M.setup(opts)
   vim.api.nvim_create_user_command("BazelStopExecutor", cmds.stop_executor, {})
   vim.api.nvim_create_user_command("BazelStopRunner", cmds.stop_runner, {})
   vim.api.nvim_create_user_command("BazelStopTester", cmds.stop_tester, {})
+
+  local nav = require("bazel-tools.navigate")
+  vim.api.nvim_create_user_command("BazelGotoBuildFile", nav.goto_build_file, {})
+  vim.api.nvim_create_user_command("BazelGotoLabel", nav.goto_label, {})
 end
 
 -- Re-export public API
@@ -89,6 +93,14 @@ end
 
 function M.stop_tester()
   require("bazel-tools.commands").stop_tester()
+end
+
+function M.goto_build_file()
+  require("bazel-tools.navigate").goto_build_file()
+end
+
+function M.goto_label()
+  require("bazel-tools.navigate").goto_label()
 end
 
 -- State accessors (for lualine)
