@@ -64,6 +64,7 @@ require("bazel-tools").setup({
   query_scope = "//...",               -- scope passed to `bazel query`
   build_kind_filter = "rule",          -- kind filter for build target selection
   run_kind_filter = "cc_binary",       -- kind filter for run target selection
+  test_kind_filter = ".*_test",        -- kind filter for test target selection
   overseer = {
     direction = "right",               -- overseer window direction
   },
@@ -82,12 +83,15 @@ require("bazel-tools").setup({
 | `BazelSelectConfig` | Pick a `--config` value (default, dbg, ...) |
 | `BazelSelectBuildTarget` | Pick a build target via `bazel query` |
 | `BazelSelectRunTarget` | Pick a run target (`cc_binary` rules) |
+| `BazelSelectTestTarget` | Pick a test target (test rules) |
 | `BazelBuild` | Build the selected target |
 | `BazelRun` | Run the selected target |
+| `BazelTest` | Run the selected test target |
 | `BazelDebug` | Build with debug config, resolve binary, launch DAP |
 | `BazelRefreshCompdb` | Run `refresh_compile_commands` for clangd |
 | `BazelStopExecutor` | Stop running build tasks |
 | `BazelStopRunner` | Stop running run tasks |
+| `BazelStopTester` | Stop running test tasks |
 
 ## Keybindings
 
@@ -106,6 +110,8 @@ if bt.is_bazel_project() then
     { "<leader>cT", "<cmd>BazelSelectRunTarget<cr>",   desc = "Select run target" },
     { "<leader>cr", "<cmd>wa<cr><cmd>BazelRun<cr>",    desc = "Run" },
     { "<leader>cd", "<cmd>wa<cr><cmd>BazelDebug<cr>",  desc = "Debug" },
+    { "<leader>cx", "<cmd>BazelSelectTestTarget<cr>",   desc = "Select test target" },
+    { "<leader>cX", "<cmd>wa<cr><cmd>BazelTest<cr>",   desc = "Run test" },
     { "<leader>cs", "<cmd>BazelStopExecutor<cr>",      desc = "Stop build" },
     { "<leader>cS", "<cmd>BazelStopRunner<cr>",        desc = "Stop run" },
   })
@@ -128,6 +134,8 @@ ins_left(bt_lualine.build_target) -- "[//src/app:main]" — click to change
 ins_left(bt_lualine.debug_button) -- debug icon — click to debug
 ins_left(bt_lualine.run_button)   -- run icon — click to run
 ins_left(bt_lualine.run_target)   -- "[//src/app:main]" — click to change
+ins_left(bt_lualine.test_button)  -- "Test" — click to test
+ins_left(bt_lualine.test_target)  -- "[//src/test:unit]" — click to change
 ```
 
 All components are guarded by `is_bazel_project()` and only display in Bazel workspaces.
@@ -143,6 +151,7 @@ bt.is_cmake_project()    -- true if CMakeLists.txt exists
 bt.get_config()          -- current config name ("default" or "dbg")
 bt.get_build_target()    -- current build target label or "[none]"
 bt.get_run_target()      -- current run target label or "[none]"
+bt.get_test_target()     -- current test target label or "[none]"
 ```
 
 ## How Debugging Works

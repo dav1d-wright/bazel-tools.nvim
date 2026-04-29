@@ -5,6 +5,7 @@ M.defaults = {
   query_scope = "//...",
   build_kind_filter = "rule",
   run_kind_filter = "cc_binary",
+  test_kind_filter = ".*_test",
   overseer = {
     direction = "right",
   },

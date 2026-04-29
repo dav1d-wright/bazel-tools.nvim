@@ -78,6 +78,31 @@ function M.components()
         end
       end,
     },
+
+    test_button = {
+      function()
+        return "Test"
+      end,
+      icon = icons.get("beaker"),
+      cond = bt.is_bazel_project,
+      on_click = function(n, mouse)
+        if n == 1 and mouse == "l" then
+          vim.cmd("BazelTest")
+        end
+      end,
+    },
+
+    test_target = {
+      function()
+        return "[" .. bt.get_test_target() .. "]"
+      end,
+      cond = bt.is_bazel_project,
+      on_click = function(n, mouse)
+        if n == 1 and mouse == "l" then
+          vim.cmd("BazelSelectTestTarget")
+        end
+      end,
+    },
   }
 end
 

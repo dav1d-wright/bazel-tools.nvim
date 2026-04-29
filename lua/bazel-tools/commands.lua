@@ -55,6 +55,16 @@ function M.select_run_target()
   end)
 end
 
+function M.select_test_target()
+  local cfg = config.current
+  telescope.pick_targets(cfg.test_kind_filter, { prompt = "Test target:" }, function(choice)
+    if choice then
+      state.set_test_target(choice)
+      vim.notify("Test target: " .. choice)
+    end
+  end)
+end
+
 function M.build()
   if not state.build_target then
     return vim.notify("No build target selected", vim.log.levels.WARN)
@@ -67,6 +77,13 @@ function M.run()
     return vim.notify("No run target selected", vim.log.levels.WARN)
   end
   overseer_run("Bazel Run: " .. state.run_target, build_cmd("run", state.run_target))
+end
+
+function M.test()
+  if not state.test_target then
+    return vim.notify("No test target selected", vim.log.levels.WARN)
+  end
+  overseer_run("Bazel Test: " .. state.test_target, build_cmd("test", state.test_target))
 end
 
 function M.debug()
@@ -131,6 +148,14 @@ end
 function M.stop_runner()
   for _, task in ipairs(require("overseer").list_tasks({ status = "RUNNING" })) do
     if task.name:match("^Bazel Run") then
+      task:stop()
+    end
+  end
+end
+
+function M.stop_tester()
+  for _, task in ipairs(require("overseer").list_tasks({ status = "RUNNING" })) do
+    if task.name:match("^Bazel Test") then
       task:stop()
     end
   end
