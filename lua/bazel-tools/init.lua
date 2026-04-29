@@ -27,6 +27,7 @@ function M.setup(opts)
   vim.api.nvim_create_user_command("BazelTest", cmds.test, {})
   vim.api.nvim_create_user_command("BazelDebug", cmds.debug, {})
   vim.api.nvim_create_user_command("BazelSetArgs", cmds.set_args, {})
+  vim.api.nvim_create_user_command("BazelBuildCurrentFile", cmds.build_current_file, {})
   vim.api.nvim_create_user_command("BazelRefreshCompdb", cmds.refresh_compdb, {})
   vim.api.nvim_create_user_command("BazelStopExecutor", cmds.stop_executor, {})
   vim.api.nvim_create_user_command("BazelStopRunner", cmds.stop_runner, {})
@@ -68,6 +69,10 @@ end
 
 function M.set_args()
   require("bazel-tools.commands").set_args()
+end
+
+function M.build_current_file()
+  require("bazel-tools.commands").build_current_file()
 end
 
 function M.refresh_compdb()

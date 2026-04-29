@@ -89,6 +89,7 @@ require("bazel-tools").setup({
 | `BazelTest` | Run the selected test target |
 | `BazelSetArgs` | Set per-target run arguments |
 | `BazelDebug` | Build with debug config, resolve binary, launch DAP |
+| `BazelBuildCurrentFile` | Build the target owning the current file |
 | `BazelRefreshCompdb` | Run `refresh_compile_commands` for clangd |
 | `BazelStopExecutor` | Stop running build tasks |
 | `BazelStopRunner` | Stop running run tasks |
@@ -112,6 +113,7 @@ if bt.is_bazel_project() then
     { "<leader>cr", "<cmd>wa<cr><cmd>BazelRun<cr>",    desc = "Run" },
     { "<leader>cd", "<cmd>wa<cr><cmd>BazelDebug<cr>",  desc = "Debug" },
     { "<leader>ca", "<cmd>BazelSetArgs<cr>",           desc = "Set run args" },
+    { "<leader>cf", "<cmd>wa<cr><cmd>BazelBuildCurrentFile<cr>", desc = "Build current file" },
     { "<leader>cx", "<cmd>BazelSelectTestTarget<cr>",   desc = "Select test target" },
     { "<leader>cX", "<cmd>wa<cr><cmd>BazelTest<cr>",   desc = "Run test" },
     { "<leader>cs", "<cmd>BazelStopExecutor<cr>",      desc = "Stop build" },

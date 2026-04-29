@@ -159,6 +159,16 @@ function M.debug()
   )
 end
 
+function M.build_current_file()
+  local filepath = vim.api.nvim_buf_get_name(0)
+  if filepath == "" then
+    return vim.notify("No file in current buffer", vim.log.levels.WARN)
+  end
+  require("bazel-tools.file_target").resolve_target(filepath, function(target)
+    overseer_run("Bazel Build: " .. target, build_cmd("build", target))
+  end)
+end
+
 function M.refresh_compdb()
   local cfg = config.current
   overseer_run(
