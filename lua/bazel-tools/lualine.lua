@@ -103,6 +103,15 @@ function M.components()
         end
       end,
     },
+
+    args_display = {
+      function()
+        return "args: " .. bt.get_run_args()
+      end,
+      cond = function()
+        return bt.is_bazel_project() and bt.get_run_args() ~= ""
+      end,
+    },
   }
 end
 

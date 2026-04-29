@@ -65,6 +65,20 @@ function M.select_test_target()
   end)
 end
 
+function M.set_args()
+  local target = state.run_target
+  if not target then
+    return vim.notify("No run target selected", vim.log.levels.WARN)
+  end
+  local current = state.get_args(target)
+  vim.ui.input({ prompt = "Args for " .. target .. ": ", default = current }, function(input)
+    if input then
+      state.set_args(target, input)
+      vim.notify("Args: " .. (input == "" and "(none)" or input))
+    end
+  end)
+end
+
 function M.build()
   if not state.build_target then
     return vim.notify("No build target selected", vim.log.levels.WARN)
@@ -76,7 +90,15 @@ function M.run()
   if not state.run_target then
     return vim.notify("No run target selected", vim.log.levels.WARN)
   end
-  overseer_run("Bazel Run: " .. state.run_target, build_cmd("run", state.run_target))
+  local cmd = build_cmd("run", state.run_target)
+  local args = state.get_args(state.run_target)
+  if args ~= "" then
+    table.insert(cmd, "--")
+    for arg in args:gmatch("%S+") do
+      table.insert(cmd, arg)
+    end
+  end
+  overseer_run("Bazel Run: " .. state.run_target, cmd)
 end
 
 function M.test()
@@ -115,11 +137,19 @@ function M.debug()
             if not binary then
               return vim.notify("Could not resolve binary path", vim.log.levels.ERROR)
             end
+            local args_str = state.get_args(target)
+            local dap_args = {}
+            if args_str ~= "" then
+              for arg in args_str:gmatch("%S+") do
+                table.insert(dap_args, arg)
+              end
+            end
             require("dap").run({
               type = cfg.dap.adapter,
               request = "launch",
               name = "Bazel: " .. target,
               program = binary,
+              args = dap_args,
               cwd = vim.fn.getcwd(),
             })
           end)

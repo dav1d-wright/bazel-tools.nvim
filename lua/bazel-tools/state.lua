@@ -5,6 +5,7 @@ local M = {
   run_target = nil,
   test_target = nil,
   config = "",
+  args = {},
 }
 
 local function save()
@@ -13,6 +14,7 @@ local function save()
     run_target = M.run_target,
     test_target = M.test_target,
     config = M.config,
+    args = M.args,
   })
 end
 
@@ -22,6 +24,13 @@ function M.load()
   M.run_target = data.run_target
   M.test_target = data.test_target
   M.config = data.config or ""
+  -- Copy into a fresh table to strip any cjson array metatable from decoded []
+  M.args = {}
+  if data.args then
+    for k, v in pairs(data.args) do
+      M.args[k] = v
+    end
+  end
 end
 
 function M.set_build_target(target)
@@ -37,6 +46,18 @@ end
 function M.set_test_target(target)
   M.test_target = target
   save()
+end
+
+function M.set_args(target, args_str)
+  M.args[target] = args_str
+  save()
+end
+
+function M.get_args(target)
+  if not target then
+    return ""
+  end
+  return M.args[target] or ""
 end
 
 function M.set_config(cfg)

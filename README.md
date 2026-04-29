@@ -87,6 +87,7 @@ require("bazel-tools").setup({
 | `BazelBuild` | Build the selected target |
 | `BazelRun` | Run the selected target |
 | `BazelTest` | Run the selected test target |
+| `BazelSetArgs` | Set per-target run arguments |
 | `BazelDebug` | Build with debug config, resolve binary, launch DAP |
 | `BazelRefreshCompdb` | Run `refresh_compile_commands` for clangd |
 | `BazelStopExecutor` | Stop running build tasks |
@@ -110,6 +111,7 @@ if bt.is_bazel_project() then
     { "<leader>cT", "<cmd>BazelSelectRunTarget<cr>",   desc = "Select run target" },
     { "<leader>cr", "<cmd>wa<cr><cmd>BazelRun<cr>",    desc = "Run" },
     { "<leader>cd", "<cmd>wa<cr><cmd>BazelDebug<cr>",  desc = "Debug" },
+    { "<leader>ca", "<cmd>BazelSetArgs<cr>",           desc = "Set run args" },
     { "<leader>cx", "<cmd>BazelSelectTestTarget<cr>",   desc = "Select test target" },
     { "<leader>cX", "<cmd>wa<cr><cmd>BazelTest<cr>",   desc = "Run test" },
     { "<leader>cs", "<cmd>BazelStopExecutor<cr>",      desc = "Stop build" },
@@ -152,6 +154,7 @@ bt.get_config()          -- current config name ("default" or "dbg")
 bt.get_build_target()    -- current build target label or "[none]"
 bt.get_run_target()      -- current run target label or "[none]"
 bt.get_test_target()     -- current test target label or "[none]"
+bt.get_run_args()        -- arguments for current run target
 ```
 
 ## How Debugging Works
