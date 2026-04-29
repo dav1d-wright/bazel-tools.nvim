@@ -10,7 +10,7 @@ M.defaults = {
     direction = "right",
   },
   dap = {
-    adapter = "cppdbg",
+    adapter = "codelldb",
     build_config = "dbg",
   },
   refresh_compdb_target = "//:refresh_compile_commands",
