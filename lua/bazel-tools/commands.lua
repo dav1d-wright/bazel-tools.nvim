@@ -1,6 +1,6 @@
 local config = require("bazel-tools.config")
 local state = require("bazel-tools.state")
-local query = require("bazel-tools.query")
+local telescope = require("bazel-tools.telescope")
 
 local M = {}
 
@@ -27,7 +27,7 @@ end
 
 function M.select_config()
   local cfg = config.current
-  vim.ui.select(cfg.configs, { prompt = "Bazel config:" }, function(choice)
+  telescope.pick(cfg.configs, { prompt = "Bazel config:" }, function(choice)
     if choice then
       state.set_config(choice == "(default)" and "" or choice)
       vim.notify("Bazel config: " .. state.get_config_display())
@@ -37,25 +37,21 @@ end
 
 function M.select_build_target()
   local cfg = config.current
-  query.query_targets(cfg.build_kind_filter, function(targets)
-    vim.ui.select(targets, { prompt = "Build target:" }, function(choice)
-      if choice then
-        state.set_build_target(choice)
-        vim.notify("Build target: " .. choice)
-      end
-    end)
+  telescope.pick_targets(cfg.build_kind_filter, { prompt = "Build target:" }, function(choice)
+    if choice then
+      state.set_build_target(choice)
+      vim.notify("Build target: " .. choice)
+    end
   end)
 end
 
 function M.select_run_target()
   local cfg = config.current
-  query.query_targets(cfg.run_kind_filter, function(targets)
-    vim.ui.select(targets, { prompt = "Run target:" }, function(choice)
-      if choice then
-        state.set_run_target(choice)
-        vim.notify("Run target: " .. choice)
-      end
-    end)
+  telescope.pick_targets(cfg.run_kind_filter, { prompt = "Run target:" }, function(choice)
+    if choice then
+      state.set_run_target(choice)
+      vim.notify("Run target: " .. choice)
+    end
   end)
 end
 

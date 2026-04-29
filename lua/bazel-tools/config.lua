@@ -7,13 +7,16 @@ M.defaults = {
   run_kind_filter = "cc_binary",
   configs = { "(default)", "dbg" },
   overseer = {
-    direction = "right",  -- overseer window direction when opening
+    direction = "right",
   },
   dap = {
     adapter = "cppdbg",
     build_config = "dbg",
   },
   refresh_compdb_target = "//:refresh_compile_commands",
+  telescope = {
+    enabled = true,
+  },
 }
 
 M.current = vim.deepcopy(M.defaults)
