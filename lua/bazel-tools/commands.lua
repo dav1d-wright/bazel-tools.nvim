@@ -5,13 +5,16 @@ local telescope = require("bazel-tools.telescope")
 local M = {}
 
 local function overseer_run(name, cmd)
-  local cfg = config.current.overseer
+  local cfg = config.current
   local overseer = require("overseer")
   local task = overseer.new_task({
     name = name,
     cmd = cmd,
+    components = {
+      { "on_output_quickfix", errorformat = cfg.errorformat, open = false, open_on_exit = "failure" },
+      "default",
+    },
   })
-  overseer.open({ enter = false, direction = cfg.direction })
   task:start()
 end
 

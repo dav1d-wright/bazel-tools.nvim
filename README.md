@@ -7,7 +7,7 @@ Designed to mirror the workflow of [cmake-tools.nvim](https://github.com/Civitas
 ## Features
 
 - Target selection via `bazel query` with telescope picker (async, non-blocking)
-- Build and run targets through overseer tasks
+- Build and run targets through overseer tasks with quickfix error parsing
 - Debug with `nvim-dap` (builds with `--config=dbg`, resolves binary via `bazel cquery`)
 - Refresh `compile_commands.json` (hedron/bazel-compile-commands-extractor)
 - Lualine statusline components
