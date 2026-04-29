@@ -26,8 +26,8 @@ local function build_cmd(subcmd, target)
 end
 
 function M.select_config()
-  local cfg = config.current
-  telescope.pick(cfg.configs, { prompt = "Bazel config:" }, function(choice)
+  local configs = config.read_configs()
+  telescope.pick(configs, { prompt = "Bazel config:" }, function(choice)
     if choice then
       state.set_config(choice == "(default)" and "" or choice)
       vim.notify("Bazel config: " .. state.get_config_display())

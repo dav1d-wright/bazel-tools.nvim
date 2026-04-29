@@ -12,7 +12,8 @@ Designed to mirror the workflow of [cmake-tools.nvim](https://github.com/Civitas
 - Refresh `compile_commands.json` (hedron/bazel-compile-commands-extractor)
 - Lualine statusline components
 - Persistent state across Neovim restarts (targets, config)
-- Configurable bazel configs, query scope, and DAP adapter
+- Auto-discover `--config` values from `.bazelrc`
+- Configurable query scope and DAP adapter
 
 ## Requirements
 
@@ -63,7 +64,6 @@ require("bazel-tools").setup({
   query_scope = "//...",               -- scope passed to `bazel query`
   build_kind_filter = "rule",          -- kind filter for build target selection
   run_kind_filter = "cc_binary",       -- kind filter for run target selection
-  configs = { "(default)", "dbg" },    -- available --config values
   overseer = {
     direction = "right",               -- overseer window direction
   },
