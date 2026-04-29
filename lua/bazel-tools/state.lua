@@ -48,6 +48,11 @@ function M.set_test_target(target)
   save()
 end
 
+function M.set_config(cfg)
+  M.config = cfg
+  save()
+end
+
 function M.set_args(target, args_str)
   M.args[target] = args_str
   save()
@@ -58,11 +63,6 @@ function M.get_args(target)
     return ""
   end
   return M.args[target] or ""
-end
-
-function M.set_config(cfg)
-  M.config = cfg
-  save()
 end
 
 function M.get_config_display()

@@ -11,7 +11,8 @@ local function overseer_run(name, cmd)
     name = name,
     cmd = cmd,
     components = {
-      { "on_output_quickfix", errorformat = cfg.errorformat, open = false, open_on_exit = "failure" },
+      { "on_output_quickfix", errorformat = cfg.errorformat, open = false, open_on_exit = "never" },
+      { "open_output", on_complete = "failure", direction = "horizontal", focus = true },
       "default",
     },
   })
