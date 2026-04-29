@@ -14,6 +14,7 @@ end
 
 function M.setup(opts)
   require("bazel-tools.config").setup(opts)
+  require("bazel-tools.state").load()
   M._setup_done = true
 
   local cmds = require("bazel-tools.commands")

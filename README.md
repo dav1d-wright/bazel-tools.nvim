@@ -11,6 +11,7 @@ Designed to mirror the workflow of [cmake-tools.nvim](https://github.com/Civitas
 - Debug with `nvim-dap` (builds with `--config=dbg`, resolves binary via `bazel cquery`)
 - Refresh `compile_commands.json` (hedron/bazel-compile-commands-extractor)
 - Lualine statusline components
+- Persistent state across Neovim restarts (targets, config)
 - Configurable bazel configs, query scope, and DAP adapter
 
 ## Requirements

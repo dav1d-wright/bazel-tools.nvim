@@ -29,7 +29,7 @@ function M.select_config()
   local cfg = config.current
   vim.ui.select(cfg.configs, { prompt = "Bazel config:" }, function(choice)
     if choice then
-      state.config = choice == "(default)" and "" or choice
+      state.set_config(choice == "(default)" and "" or choice)
       vim.notify("Bazel config: " .. state.get_config_display())
     end
   end)
@@ -40,7 +40,7 @@ function M.select_build_target()
   query.query_targets(cfg.build_kind_filter, function(targets)
     vim.ui.select(targets, { prompt = "Build target:" }, function(choice)
       if choice then
-        state.build_target = choice
+        state.set_build_target(choice)
         vim.notify("Build target: " .. choice)
       end
     end)
@@ -52,7 +52,7 @@ function M.select_run_target()
   query.query_targets(cfg.run_kind_filter, function(targets)
     vim.ui.select(targets, { prompt = "Run target:" }, function(choice)
       if choice then
-        state.run_target = choice
+        state.set_run_target(choice)
         vim.notify("Run target: " .. choice)
       end
     end)
