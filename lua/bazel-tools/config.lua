@@ -17,6 +17,10 @@ M.defaults = {
   telescope = {
     enabled = true,
   },
+  auto_refresh_compdb = {
+    enabled = false,
+    debounce_ms = 2000,
+  },
 }
 
 M.current = vim.deepcopy(M.defaults)

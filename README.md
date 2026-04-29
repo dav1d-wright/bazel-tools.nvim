@@ -73,6 +73,10 @@ require("bazel-tools").setup({
     build_config = "dbg",              -- --config used for debug builds
   },
   refresh_compdb_target = "//:refresh_compile_commands",
+  auto_refresh_compdb = {
+    enabled = false,                   -- auto-refresh on BUILD save
+    debounce_ms = 2000,                -- debounce interval
+  },
 })
 ```
 
