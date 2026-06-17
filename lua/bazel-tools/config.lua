@@ -13,13 +13,24 @@ M.defaults = {
     adapter = "codelldb",
     build_config = "dbg",
   },
-  refresh_compdb_target = "//:refresh_compile_commands",
   telescope = {
     enabled = true,
   },
-  auto_refresh_compdb = {
+  auto_refresh = {
     enabled = false,
     debounce_ms = 2000,
+  },
+  refresh_targets = {
+    compdb = {
+      target = "//:refresh_compile_commands",
+      patterns = { "*.c", "*.cc", "*.cpp", "*.cxx", "*.h", "*.hpp", "*.hxx" },
+      output = "compile_commands.json",
+    },
+    rust_project = {
+      target = "@rules_rust//tools/rust_analyzer:gen_rust_project",
+      patterns = { "*.rs" },
+      output = "rust-project.json",
+    },
   },
   errorformat = "%f:%l:%c: %trror: %m,%f:%l:%c: %tarning: %m,%f:%l: %trror: %m,%f:%l: %tarning: %m",
 }

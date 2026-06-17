@@ -175,9 +175,10 @@ end
 
 function M.refresh_compdb()
   local cfg = config.current
+  local target = cfg.refresh_targets.compdb.target
   overseer_run(
     "Bazel: refresh compile_commands",
-    { cfg.bazel_command, "run", cfg.refresh_compdb_target }
+    { cfg.bazel_command, "run", target }
   )
 end
 

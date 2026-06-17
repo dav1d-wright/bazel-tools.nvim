@@ -18,6 +18,16 @@ function M.setup(opts)
   require("bazel-tools.autocmds").setup()
   M._setup_done = true
 
+  local cfg = require("bazel-tools.config").current
+  if cfg.auto_refresh.enabled then
+    local refresh = require("bazel-tools.refresh")
+    for name, tcfg in pairs(cfg.refresh_targets) do
+      if tcfg.target then
+        refresh.run_initial(name, tcfg)
+      end
+    end
+  end
+
   local cmds = require("bazel-tools.commands")
   vim.api.nvim_create_user_command("BazelSelectConfig", cmds.select_config, {})
   vim.api.nvim_create_user_command("BazelSelectBuildTarget", cmds.select_build_target, {})
